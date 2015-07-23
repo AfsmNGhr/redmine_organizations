@@ -1,20 +1,18 @@
-<% @users_by_role_and_organization = @project.users_by_role_and_organization -%>
+<% @users_by_role_and_organizations = @project.users_by_role_and_organizations -%>
 
-<% if @users_by_role_and_organization.any? -%>
-<div class="members box">
-  <h3><%=l(:label_member_plural)%></h3>  
-  <p><% @users_by_role_and_organization.keys.sort.each do |role| -%>
-    <%=h role %>: 
-    <%= @users_by_role_and_organization[role].keys.sort_by(&:name).map do |org|
-      if org.new_record?
-          @users_by_role_and_organization[role][org].map{|u| link_to_user u}.join(", ").html_safe
-      else
-        link_to_organization(org, {:link_ancestors=>false, :fullname=>true}) +
-          content_tag(:span, " (#{@users_by_role_and_organization[role][org].map{|u| link_to_user u}.join(", ")})".html_safe,
-                      :class => "organization-members")
-      end
-    end.join(", ").html_safe -%>
-    <br />
-  <% end -%></p>
-</div>
+<% if @users_by_role_and_organizations.any? -%>
+  <div class="members box">
+    <h3><%=l(:label_member_plural)%></h3>
+    <p>
+      <% @users_by_role_and_organizations.keys.sort.each do |role| -%>
+        <%=h role %>
+      <ul>
+        <%= @users_by_role_and_organizations[role].keys.sort_by(&:name).map do |user|
+  content_tag(:li, "#{link_to_user(user) +
+    content_tag(:span, " (#{@users_by_role_and_organizations[role][user][0].map{|o| link_to_organization(o, {link_ancestors: false, fullname: true})}.join(', ')})".html_safe, class: "organization-members")}".html_safe, class: "organization-members")
+end.join('').html_safe -%>
+      </ul>
+      <br />
+    <% end -%></p>
+  </div>
 <% end -%>

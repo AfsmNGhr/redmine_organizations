@@ -1,9 +1,11 @@
-<% unless @user.organization.blank? %>
-<h3><%=l(:label_organization)%></h3>
-<ul>
-  <li>
-    <%= link_to_organization @user.organization %>
-    <%= "(#{@user.organization.description})" if @user.organization.description.present? %>
-  </li>
-</ul>
+<% unless @user.organizations.blank? %>
+  <h3><%=l(:label_organization_plural)%></h3>
+  <ul>
+    <% @user.organizations.each do |organization| -%>
+      <li>
+        <%= link_to_organization organization %>
+        <%= "(#{organization.description})" if organization.description.present? %>
+      </li>
+    <% end %>
+  </ul>
 <% end %>

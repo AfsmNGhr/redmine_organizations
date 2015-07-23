@@ -1,3 +1,4 @@
+# coding: utf-8
 require_dependency 'project'
 
 class Project
@@ -13,11 +14,11 @@ class Project
   # => { Role(1) => { Org(1) => [ User(1), User(2), ... ] } }
   #
   # TODO: simplify / refactor / test it correctly !!!
-  def users_by_role_and_organization
+  def users_by_role_and_organizations
     dummy_org = Organization.new(:name => l(:label_others))
     self.members.map do |member|
       member.roles.map do |role|
-        { :user => member.user, :role => role, :organization => member.user.organization }
+        { :user => member.user, :role => role, :organizations => member.user.organizations }
       end
     end.flatten.group_by do |hsh|
       hsh[:role]
@@ -28,10 +29,10 @@ class Project
       else
         #build a hash for that role
         hsh = users.group_by do |user|
-          user[:organization] || dummy_org
+          user[:user]
         end
-        hsh.each do |org, users_hsh|
-          hsh[org] = users_hsh.map{|h| h[:user]}.sort
+        hsh.each do |i, org|
+          hsh[i] = org.map{|h| h[:organizations]}.sort
         end
         memo[role] = hsh
         memo

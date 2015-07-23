@@ -9,11 +9,11 @@ require_dependency 'user'
 
 class User < Principal
   unloadable
-  belongs_to :organization
+  has_and_belongs_to_many :organizations
 
   safe_attributes 'organization_id'
   attr_accessor :orga_update_method
-  
+
   def destroy_membership_through_organization(project_id)
     if id
       attributes = {:user_id => id, :project_id => project_id}

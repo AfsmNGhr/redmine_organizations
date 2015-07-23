@@ -6,7 +6,7 @@ class Organization < ActiveRecord::Base
   validates :name, :uniqueness => {:scope => :parent_id}
   validates_format_of :mail, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, :allow_blank => true
 
-  has_many :users
+  has_and_belongs_to_many :users
   has_many :organization_roles
 
   attr_accessible :name, :parent_id, :description, :mail, :direction
@@ -22,15 +22,15 @@ class Organization < ActiveRecord::Base
       org.move_left
     end
   end
-  
+
   def <=>(other)
     other.name.casecmp(self.name)
   end
-  
+
   def name
     read_attribute(:name) || ""
   end
-  
+
   def fullname
     @fullname ||= ancestors.order('lft').all.map do |ancestor|
       ancestor.name+Organization::SEPARATOR
