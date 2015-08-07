@@ -19,8 +19,8 @@
       <%= f.radio_button :orga_update_method, 'replace' %>
       <%= f.label :orga_update_method, l(:memberships_replace), :value => 'replace' %>
       <%= select_tag :copy_user,
-                     options_from_collection_for_select(User.sorted.active.where("organization_id = ? AND id != ?",
-                                                                 @user.organization.try(:id),
+                     options_from_collection_for_select(User.sorted.active.where("organization_id IN (?) AND id != ?",
+                                                                 @user.organizations.pluck(:id),
                                                                  @user.id), :id, :name ) %>
     </p>
 
